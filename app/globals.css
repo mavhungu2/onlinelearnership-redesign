@@ -1,0 +1,226 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-plus-jakarta), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Brand — deep trustworthy blue */
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-300: #93c5fd;
+  --color-brand-400: #60a5fa;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-700: #1d4ed8;
+  --color-brand-800: #1e40af;
+  --color-brand-900: #1e3a8a;
+  --color-brand-950: #172554;
+
+  /* Accent — vibrant emerald for opportunity */
+  --color-accent-50: #ecfdf5;
+  --color-accent-100: #d1fae5;
+  --color-accent-200: #a7f3d0;
+  --color-accent-300: #6ee7b7;
+  --color-accent-400: #34d399;
+  --color-accent-500: #10b981;
+  --color-accent-600: #059669;
+  --color-accent-700: #047857;
+  --color-accent-800: #065f46;
+  --color-accent-900: #064e3b;
+
+  /* Warm — amber for deadlines/urgency */
+  --color-warm-50: #fffbeb;
+  --color-warm-100: #fef3c7;
+  --color-warm-300: #fcd34d;
+  --color-warm-500: #f59e0b;
+  --color-warm-600: #d97706;
+  --color-warm-700: #b45309;
+
+  /* Surface — subtle layered backgrounds */
+  --color-surface-50: #fafaf9;
+  --color-surface-100: #f5f5f4;
+
+  --shadow-soft: 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 1px 6px -1px rgb(0 0 0 / 0.06);
+  --shadow-card: 0 4px 12px -4px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+  --shadow-hover: 0 12px 32px -8px rgb(0 0 0 / 0.12), 0 4px 8px -4px rgb(0 0 0 / 0.06);
+
+  --radius-card: 1rem;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-white text-slate-900 antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+  ::selection {
+    @apply bg-brand-600 text-white;
+  }
+}
+
+@utility container-page {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility text-pretty {
+  text-wrap: pretty;
+}
+
+/* ---------- WordPress / Gutenberg content rendering ---------- */
+.wp-content {
+  color: rgb(51 65 85);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  max-width: 72ch;
+}
+.wp-content > *:first-child {
+  margin-top: 0;
+}
+.wp-content > *:last-child {
+  margin-bottom: 0;
+}
+.wp-content h1,
+.wp-content h2,
+.wp-content h3,
+.wp-content h4 {
+  font-family: var(--font-display);
+  color: rgb(15 23 42);
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.wp-content h2,
+.wp-content .wp-block-heading {
+  font-size: 1.625rem;
+  font-weight: 700;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+.wp-content h3,
+.wp-content h3.wp-block-heading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 2.25rem;
+  margin-bottom: 0.5rem;
+}
+.wp-content h4 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  margin-top: 1.75rem;
+  margin-bottom: 0.4rem;
+}
+.wp-content p,
+.wp-content .wp-block-paragraph {
+  margin: 0 0 1.2rem;
+}
+.wp-content p:empty {
+  display: none;
+}
+.wp-content strong,
+.wp-content b {
+  color: rgb(15 23 42);
+  font-weight: 600;
+}
+.wp-content em,
+.wp-content i {
+  font-style: italic;
+}
+.wp-content ul,
+.wp-content ol,
+.wp-content .wp-block-list {
+  margin: 0 0 1.4rem;
+  padding-left: 1.4rem;
+}
+.wp-content ul,
+.wp-content ul.wp-block-list {
+  list-style: disc;
+}
+.wp-content ol,
+.wp-content ol.wp-block-list {
+  list-style: decimal;
+}
+.wp-content li {
+  margin-bottom: 0.5rem;
+  padding-left: 0.25rem;
+}
+.wp-content li::marker {
+  color: rgb(37 99 235);
+}
+.wp-content a {
+  color: rgb(37 99 235);
+  text-decoration: underline;
+  text-decoration-color: rgb(191 219 254);
+  text-underline-offset: 3px;
+  transition: color 0.15s, text-decoration-color 0.15s;
+}
+.wp-content a:hover {
+  color: rgb(30 64 175);
+  text-decoration-color: rgb(37 99 235);
+}
+.wp-content hr,
+.wp-content .wp-block-separator {
+  border: none;
+  border-top: 1px solid rgb(226 232 240);
+  margin: 2.5rem 0;
+  width: 100%;
+  height: 0;
+}
+.wp-content figure,
+.wp-content .wp-block-image {
+  margin: 2rem 0;
+}
+.wp-content figure img,
+.wp-content .wp-block-image img {
+  border-radius: 1rem;
+  margin: 0;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  display: block;
+}
+.wp-content figcaption {
+  font-size: 0.875rem;
+  color: rgb(100 116 139);
+  text-align: center;
+  margin-top: 0.75rem;
+}
+.wp-content img {
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+  max-width: 100%;
+  height: auto;
+}
+.wp-content blockquote {
+  border-left: 3px solid rgb(37 99 235);
+  padding: 0.5rem 1rem;
+  margin: 1.5rem 0;
+  background: rgb(239 246 255);
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: rgb(30 41 59);
+  font-style: italic;
+}
+.wp-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+}
+.wp-content th, .wp-content td {
+  border: 1px solid rgb(226 232 240);
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+}
+.wp-content th { background: rgb(248 250 252); font-weight: 600; }
+.wp-content strong { color: rgb(15 23 42); font-weight: 600; }

@@ -1,0 +1,31 @@
+# Firebase App Hosting backend configuration.
+# Docs: https://firebase.google.com/docs/app-hosting/configure
+
+runConfig:
+  # Conservative defaults — App Hosting auto-scales from 0 to maxInstances.
+  minInstances: 0
+  maxInstances: 5
+  concurrency: 80
+  cpu: 1
+  memoryMiB: 512
+
+env:
+  # Public env vars — committed safely.
+  - variable: WORDPRESS_URL
+    value: https://www.onlinelearnership.co.za
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: WORDPRESS_REVALIDATE_SECONDS
+    value: "300"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # logo.dev token — replace with your own from https://www.logo.dev once you sign up.
+  - variable: NEXT_PUBLIC_LOGODEV_TOKEN
+    value: pk_X-1ZO13GSgeOoUrIuJ6GMQ
+    availability:
+      - BUILD
+      - RUNTIME
