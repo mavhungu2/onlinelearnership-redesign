@@ -19,7 +19,7 @@ import { getOpportunity, getRelatedOpportunitiesFor } from "@/lib/opportunities"
 import { deadlineLabel, formatDate, typeColors, typeLabels } from "@/lib/utils";
 
 export async function generateMetadata(
-  props: PageProps<"/opportunities/[slug]">,
+  props: PageProps<"/[slug]">,
 ): Promise<Metadata> {
   const { slug } = await props.params;
   const data = await getOpportunity(slug);
@@ -31,7 +31,7 @@ export async function generateMetadata(
 }
 
 export default async function OpportunityDetail(
-  props: PageProps<"/opportunities/[slug]">,
+  props: PageProps<"/[slug]">,
 ) {
   const { slug } = await props.params;
   const data = await getOpportunity(slug);

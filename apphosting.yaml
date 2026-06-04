@@ -12,7 +12,7 @@ runConfig:
 env:
   # Public env vars — committed safely.
   - variable: WORDPRESS_URL
-    value: https://www.onlinelearnership.co.za
+    value: https://wp.onlinelearnership.co.za
     availability:
       - BUILD
       - RUNTIME

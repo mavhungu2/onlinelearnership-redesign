@@ -48,7 +48,7 @@ export function OpportunityCard({ opportunity, variant = "default" }: Props) {
   if (variant === "compact") {
     return (
       <Link
-        href={`/opportunities/${opportunity.slug}`}
+        href={`/${opportunity.slug}`}
         className="group flex gap-3 rounded-xl p-3 transition hover:bg-slate-50"
       >
         <div
@@ -73,7 +73,7 @@ export function OpportunityCard({ opportunity, variant = "default" }: Props) {
 
   return (
     <Link
-      href={`/opportunities/${opportunity.slug}`}
+      href={`/${opportunity.slug}`}
       className={`group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-hover ${featured ? "ring-1 ring-brand-100" : ""}`}
     >
       <div className={`relative h-44 overflow-hidden ${hasImage ? "bg-slate-100" : `bg-gradient-to-br ${gradient}`}`}>

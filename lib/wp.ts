@@ -367,7 +367,11 @@ function deriveApplyUrl(post: WPPost): string {
   if (post.acf?.apply_url) return post.acf.apply_url;
 
   const html = post.content.rendered;
-  const ownHosts = ["onlinelearnership.co.za", "www.onlinelearnership.co.za"];
+  const ownHosts = [
+    "onlinelearnership.co.za",
+    "www.onlinelearnership.co.za",
+    "wp.onlinelearnership.co.za",
+  ];
 
   // Find every external <a href> with anchor text — collect candidates.
   const linkRegex = /<a[^>]+href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
