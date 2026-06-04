@@ -362,6 +362,54 @@ function deriveHowToApply(post: WPPost): string[] {
   return [`Click "Apply now" to view the full application details on ${decodeHtml(post.title.rendered)}.`];
 }
 
+function deriveApplyUrl(post: WPPost): string {
+  // 1. Explicit ACF field wins.
+  if (post.acf?.apply_url) return post.acf.apply_url;
+
+  const html = post.content.rendered;
+  const ownHosts = ["onlinelearnership.co.za", "www.onlinelearnership.co.za"];
+
+  // Find every external <a href> with anchor text — collect candidates.
+  const linkRegex = /<a[^>]+href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+  const candidates: { url: string; text: string; score: number }[] = [];
+  for (const m of html.matchAll(linkRegex)) {
+    const url = m[1];
+    const text = stripHtml(m[2]).toLowerCase();
+    let host: string;
+    try {
+      host = new URL(url, "https://www.onlinelearnership.co.za").host.toLowerCase();
+    } catch {
+      continue;
+    }
+    if (ownHosts.includes(host)) continue; // skip self-links
+    if (!/^https?:/.test(url)) continue;
+
+    // Score by anchor text keywords + URL hints.
+    let score = 0;
+    if (/\bapply\b/.test(text)) score += 5;
+    if (/recruitment|application portal|careers? portal|official platform/.test(text)) score += 4;
+    if (/click here|apply now|apply here|submit/.test(text)) score += 3;
+    if (/portal|platform|website/.test(text)) score += 1;
+    if (/careers?\b|jobs?\b|vacanc/.test(host)) score += 3;
+    if (/\.(gov|edu)/.test(host)) score += 2;
+    if (/simplify\.hr|workable|greenhouse|lever|smartrecruiters|successfactors|sapsf|taleo/.test(host)) score += 4;
+
+    // Penalty: generic category/blog links that just say e.g. "Funding Bursaries"
+    if (/bursar|opportunit|programme|courses?/.test(text) && score === 0) continue;
+
+    candidates.push({ url, text, score });
+  }
+
+  // Highest-scoring candidate wins.
+  candidates.sort((a, b) => b.score - a.score);
+  if (candidates.length > 0 && candidates[0].score >= 3) {
+    return candidates[0].url;
+  }
+
+  // Fallback: link back to the WP post so the user can read the full guide there.
+  return post.link;
+}
+
 function deriveResponsibilities(post: WPPost): string[] {
   if (post.acf?.responsibilities) return splitToList(post.acf.responsibilities);
   const match = post.content.rendered.match(
@@ -413,7 +461,7 @@ export function mapPostToOpportunity(post: WPPost): Opportunity {
     requirements: deriveRequirements(post),
     responsibilities: deriveResponsibilities(post),
     howToApply: deriveHowToApply(post),
-    applyUrl: post.acf?.apply_url ?? post.link,
+    applyUrl: deriveApplyUrl(post),
     featured: post.acf?.featured ?? post.sticky ?? false,
     tags: deriveTags(post),
   };

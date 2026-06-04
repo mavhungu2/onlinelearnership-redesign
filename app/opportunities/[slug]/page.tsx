@@ -204,15 +204,31 @@ export default async function OpportunityDetail(
                 {deadline.text}
               </p>
 
-              <a
-                href={opp.applyUrl ?? "#"}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent-500 px-5 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-accent-600"
-              >
-                Apply now
-                <ArrowUpRight className="h-4 w-4" />
-              </a>
+              {(() => {
+                const url = opp.applyUrl;
+                if (!url) return null;
+                let host = "";
+                try { host = new URL(url).host.replace(/^www\./, ""); } catch { /* no-op */ }
+                const isExternal = host && !host.endsWith("onlinelearnership.co.za");
+                return (
+                  <>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                      className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent-500 px-5 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-accent-600"
+                    >
+                      {isExternal ? `Apply on ${host}` : "Read full application guide"}
+                      <ArrowUpRight className="h-4 w-4" />
+                    </a>
+                    <p className="mt-2 text-center text-[11px] text-slate-500">
+                      {isExternal
+                        ? "Opens the employer's official application portal in a new tab."
+                        : "Opens the full guide on onlinelearnership.co.za."}
+                    </p>
+                  </>
+                );
+              })()}
               <div className="mt-3 grid grid-cols-2 gap-2">
                 <button className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 px-3 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50">
                   <Bookmark className="h-3.5 w-3.5" />

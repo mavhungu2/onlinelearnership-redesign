@@ -25,7 +25,7 @@ export function Header() {
   const [moreOpen, setMoreOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200/70 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70">
+    <header className="sticky top-0 z-40 w-full border-b border-slate-200/70 bg-white/95">
       <div className="hidden lg:block border-b border-slate-100">
         <div className="container-page flex h-9 items-center justify-between text-xs text-slate-500">
           <p className="flex items-center gap-2">
@@ -115,12 +115,18 @@ export function Header() {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm" onClick={() => setMobileOpen(false)}>
+        <div
+          className="md:hidden fixed inset-0 z-[100] bg-slate-950/70"
+          onClick={() => setMobileOpen(false)}
+          role="dialog"
+          aria-modal="true"
+        >
           <div
-            className="absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white shadow-2xl"
+            className="absolute inset-y-0 right-0 flex w-[88%] max-w-sm flex-col overflow-y-auto bg-white shadow-2xl"
+            style={{ backgroundColor: "#ffffff" }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-slate-200 p-4">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white p-4">
               <Logo />
               <button
                 type="button"
@@ -131,8 +137,8 @@ export function Header() {
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <nav className="flex flex-col p-3">
-              {[...primaryNav, ...moreNav].map((item) => (
+            <nav className="flex flex-1 flex-col gap-1 bg-white p-3">
+              {primaryNav.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -142,14 +148,27 @@ export function Header() {
                   {item.label}
                 </Link>
               ))}
+              <div className="my-2 h-px bg-slate-200" />
+              {moreNav.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-lg px-3 py-3 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+            <div className="sticky bottom-0 border-t border-slate-200 bg-white p-3">
               <Link
                 href="/opportunities"
                 onClick={() => setMobileOpen(false)}
-                className="mt-4 inline-flex items-center justify-center rounded-lg bg-brand-600 px-4 py-3 text-base font-semibold text-white shadow-soft hover:bg-brand-700"
+                className="inline-flex w-full items-center justify-center rounded-lg bg-brand-600 px-4 py-3 text-base font-semibold text-white shadow-soft hover:bg-brand-700"
               >
                 Browse opportunities
               </Link>
-            </nav>
+            </div>
           </div>
         </div>
       )}
