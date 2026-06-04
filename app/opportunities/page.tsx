@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ChevronDown, MapPin, Search, SlidersHorizontal } from "lucide-react";
+import { Fragment } from "react";
 import { OpportunityCard } from "@/components/OpportunityCard";
+import { AdInFeed, AdSidebar } from "@/components/Ads";
 import { categories, sectors } from "@/lib/data";
 import { listOpportunities } from "@/lib/opportunities";
 import type { Opportunity } from "@/lib/types";
@@ -209,10 +211,24 @@ export default async function OpportunitiesPage(props: PageProps<"/opportunities
               </div>
             ) : (
               <div className="mt-6 grid gap-5 sm:grid-cols-2">
-                {filtered.map((opp) => (
-                  <OpportunityCard key={opp.slug} opportunity={opp} />
+                {filtered.map((opp, i) => (
+                  <Fragment key={opp.slug}>
+                    <OpportunityCard opportunity={opp} />
+                    {/* Inline ad every 8 cards (after positions 8, 16, 24...) — full row span */}
+                    {(i + 1) % 8 === 0 && i < filtered.length - 1 && (
+                      <div className="sm:col-span-2">
+                        <AdInFeed />
+                      </div>
+                    )}
+                  </Fragment>
                 ))}
               </div>
+              {/* Bottom-of-list ad */}
+              {filtered.length > 4 && (
+                <div className="mt-10">
+                  <AdSidebar />
+                </div>
+              )}
             )}
           </div>
         </div>

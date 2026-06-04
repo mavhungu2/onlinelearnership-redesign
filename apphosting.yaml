@@ -29,3 +29,30 @@ env:
     availability:
       - BUILD
       - RUNTIME
+
+  # Google AdSense — same publisher ID + ad units that run on the WordPress site
+  - variable: NEXT_PUBLIC_ADSENSE_CLIENT
+    value: ca-pub-4043939286605519
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_ADSENSE_SLOT_HOMEPAGE
+    value: "4412725597"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE
+    value: "3974683846"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR
+    value: "9948329863"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_ADSENSE_SLOT_FEED
+    value: "1230950212"
+    availability:
+      - BUILD
+      - RUNTIME

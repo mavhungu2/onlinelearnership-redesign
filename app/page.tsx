@@ -6,6 +6,7 @@ import { CompanyLogo } from "@/components/CompanyLogo";
 import { OpportunityCard } from "@/components/OpportunityCard";
 import { WhatsAppBanner } from "@/components/WhatsAppBanner";
 import { HowItWorks } from "@/components/HowItWorks";
+import { AdHomepage } from "@/components/Ads";
 import { sectors } from "@/lib/data";
 import { listOpportunities } from "@/lib/opportunities";
 
@@ -47,6 +48,11 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* AdSense — between hero and featured */}
+      <div className="container-page pt-8">
+        <AdHomepage />
+      </div>
 
       <section className="container-page py-20">
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">

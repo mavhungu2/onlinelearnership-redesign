@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 import { OpportunityCard } from "@/components/OpportunityCard";
+import { AdInArticle, AdSidebar } from "@/components/Ads";
 import { getOpportunity, getRelatedOpportunitiesFor } from "@/lib/opportunities";
 import { deadlineLabel, formatDate, typeColors, typeLabels } from "@/lib/utils";
 
@@ -170,10 +171,32 @@ export default async function OpportunityDetail(
                 </Section>
               </>
             ) : richContent ? (
-              <div
-                className="wp-content prose-content"
-                dangerouslySetInnerHTML={{ __html: richContent }}
-              />
+              (() => {
+                // Split the rich content on the first separator so we can insert an ad mid-article.
+                const sepIdx = richContent.indexOf('<hr class="wp-block-separator');
+                const splitPoint = sepIdx > 0 ? sepIdx : richContent.length;
+                const beforeAd = richContent.slice(0, splitPoint);
+                const afterAd = richContent.slice(splitPoint);
+                return (
+                  <>
+                    <div
+                      className="wp-content prose-content"
+                      dangerouslySetInnerHTML={{ __html: beforeAd }}
+                    />
+                    {afterAd && (
+                      <div className="my-8">
+                        <AdInArticle />
+                      </div>
+                    )}
+                    {afterAd && (
+                      <div
+                        className="wp-content prose-content"
+                        dangerouslySetInnerHTML={{ __html: afterAd }}
+                      />
+                    )}
+                  </>
+                );
+              })()
             ) : (
               <div>
                 <h2 className="font-display text-2xl font-bold text-slate-900">About this opportunity</h2>
@@ -251,6 +274,8 @@ export default async function OpportunityDetail(
                 {opp.duration && <Fact icon={Calendar} label="Duration" value={opp.duration} />}
               </dl>
             </div>
+
+            <AdSidebar />
 
             <div className="rounded-2xl border border-brand-100 bg-gradient-to-br from-brand-50 to-white p-6">
               <h3 className="font-display font-bold text-slate-900">Don&apos;t miss out</h3>
