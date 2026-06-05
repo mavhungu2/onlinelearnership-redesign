@@ -11,7 +11,7 @@ declare global {
   }
 }
 
-type Layout = "horizontal" | "in-article" | "vertical" | "in-feed" | "square";
+type Layout = "horizontal" | "in-article" | "vertical" | "in-feed" | "square" | "multiplex";
 
 interface AdSlotProps {
   slot: string;
@@ -41,6 +41,9 @@ const layoutAttrs: Record<Layout, Record<string, string>> = {
     "data-ad-format": "fluid",
     "data-ad-layout-key": "-fb+5w+4e-db+86",
   },
+  multiplex: {
+    "data-ad-format": "autorelaxed",
+  },
 };
 
 const minHeights: Record<Layout, string> = {
@@ -49,6 +52,7 @@ const minHeights: Record<Layout, string> = {
   square: "min-h-[250px]",
   "in-article": "min-h-[200px]",
   "in-feed": "min-h-[120px]",
+  multiplex: "min-h-[300px]",
 };
 
 export function AdSlot({ slot, layout = "horizontal", className = "", label }: AdSlotProps) {
@@ -95,6 +99,8 @@ const SLOTS = {
   article: process.env.NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE || "3974683846",
   sidebar: process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR || "9948329863",
   feed: process.env.NEXT_PUBLIC_ADSENSE_SLOT_FEED || "1230950212",
+  multiplex: process.env.NEXT_PUBLIC_ADSENSE_SLOT_MULTIPLEX || "3343309551",
+  paragraph: process.env.NEXT_PUBLIC_ADSENSE_SLOT_PARAGRAPH || "9948329863",
 };
 
 export const AdHomepage = ({ className = "" }: { className?: string }) => (
@@ -111,4 +117,12 @@ export const AdSidebar = ({ className = "" }: { className?: string }) => (
 
 export const AdInFeed = ({ className = "" }: { className?: string }) => (
   <AdSlot slot={SLOTS.feed} layout="in-feed" className={className} />
+);
+
+export const AdMultiplex = ({ className = "" }: { className?: string }) => (
+  <AdSlot slot={SLOTS.multiplex} layout="multiplex" className={className} label="More opportunities for you" />
+);
+
+export const AdBetweenParagraphs = ({ className = "" }: { className?: string }) => (
+  <AdSlot slot={SLOTS.paragraph} layout="horizontal" className={className} />
 );

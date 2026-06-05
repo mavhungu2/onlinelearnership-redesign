@@ -56,3 +56,13 @@ env:
     availability:
       - BUILD
       - RUNTIME
+  - variable: NEXT_PUBLIC_ADSENSE_SLOT_MULTIPLEX
+    value: "3343309551"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_ADSENSE_SLOT_PARAGRAPH
+    value: "9948329863"
+    availability:
+      - BUILD
+      - RUNTIME

@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 import { OpportunityCard } from "@/components/OpportunityCard";
-import { AdInArticle, AdSidebar } from "@/components/Ads";
+import { AdBetweenParagraphs, AdInArticle, AdMultiplex, AdSidebar } from "@/components/Ads";
 import { getOpportunity, getRelatedOpportunitiesFor } from "@/lib/opportunities";
 import { deadlineLabel, formatDate, typeColors, typeLabels } from "@/lib/utils";
 
@@ -172,28 +172,40 @@ export default async function OpportunityDetail(
               </>
             ) : richContent ? (
               (() => {
-                // Split the rich content on the first separator so we can insert an ad mid-article.
-                const sepIdx = richContent.indexOf('<hr class="wp-block-separator');
-                const splitPoint = sepIdx > 0 ? sepIdx : richContent.length;
-                const beforeAd = richContent.slice(0, splitPoint);
-                const afterAd = richContent.slice(splitPoint);
+                // Split the WP rich content on every Gutenberg section separator (<hr class="wp-block-separator..."/>)
+                // so we can interleave ads between sections. AdSense policy limits per-page ads to ~3 in body
+                // content (excluding sidebar/auto-placed). We cap inline ads at 3 + 1 multiplex at the end.
+                const chunks = richContent.split(/<hr class="wp-block-separator[^>]*\/>/);
+
+                // Pick 3 insertion points spread evenly through the chunks.
+                // For a post with 14 separators (= 15 chunks), ads land at chunks 3, 7, 11 — well-spaced.
+                const adAfter: Set<number> = new Set();
+                if (chunks.length >= 2) {
+                  const targets = Math.min(3, chunks.length - 1);
+                  for (let i = 1; i <= targets; i++) {
+                    adAfter.add(Math.floor((i * chunks.length) / (targets + 1)));
+                  }
+                }
+
                 return (
                   <>
-                    <div
-                      className="wp-content prose-content"
-                      dangerouslySetInnerHTML={{ __html: beforeAd }}
-                    />
-                    {afterAd && (
-                      <div className="my-8">
-                        <AdInArticle />
+                    {chunks.map((chunk, i) => (
+                      <div key={i}>
+                        <div
+                          className="wp-content prose-content"
+                          dangerouslySetInnerHTML={{ __html: chunk }}
+                        />
+                        {adAfter.has(i) && (
+                          <div className="my-8">
+                            {i === Math.max(...adAfter) ? <AdInArticle /> : <AdBetweenParagraphs />}
+                          </div>
+                        )}
                       </div>
-                    )}
-                    {afterAd && (
-                      <div
-                        className="wp-content prose-content"
-                        dangerouslySetInnerHTML={{ __html: afterAd }}
-                      />
-                    )}
+                    ))}
+                    {/* End-of-article recommendations grid */}
+                    <div className="mt-12">
+                      <AdMultiplex />
+                    </div>
                   </>
                 );
               })()
