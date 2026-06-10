@@ -1,6 +1,34 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Override Next.js's default no-cache headers so Firebase's CDN actually
+  // caches our rendered HTML. We manage data freshness via our own in-memory
+  // cache in lib/wp.ts (5 min TTL), so 5 min edge cache is safe.
+  //
+  // s-maxage:                edge CDN cache duration (300s = 5 min)
+  // stale-while-revalidate:  serve stale up to 1 day while refreshing in bg
+  // max-age=0:               browser doesn't cache (so new visits always get fresh edge content)
+  async headers() {
+    const cacheable = "public, max-age=0, s-maxage=300, stale-while-revalidate=86400";
+    const longCache = "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800";
+    return [
+      {
+        // All page routes: cache at edge for 5 min
+        source: "/((?!_next/|api/|.*\\..*).*)",
+        headers: [{ key: "Cache-Control", value: cacheable }],
+      },
+      {
+        // Static info pages can cache much longer
+        source: "/(about|contact|privacy|terms)",
+        headers: [{ key: "Cache-Control", value: longCache }],
+      },
+      {
+        // sitemap & robots also fine to cache
+        source: "/(sitemap.xml|robots.txt|ads.txt)",
+        headers: [{ key: "Cache-Control", value: cacheable }],
+      },
+    ];
+  },
   async redirects() {
     return [
       // We previously published /opportunities/<slug> during the redesign phase.
