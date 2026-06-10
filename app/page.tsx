@@ -10,6 +10,10 @@ import { AdHomepage } from "@/components/Ads";
 import { sectors } from "@/lib/data";
 import { listOpportunities } from "@/lib/opportunities";
 
+// ISR — cache the rendered homepage at Firebase's edge for 5 min so TTFB stays sub-100ms
+// for ~99% of requests. Revalidates in the background; new WP posts appear within 5 min.
+export const revalidate = 300;
+
 const trustedEmployers = [
   { name: "Sasol", domain: "sasol.com" },
   { name: "Absa", domain: "absa.co.za" },

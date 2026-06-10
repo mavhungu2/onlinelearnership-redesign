@@ -1,6 +1,9 @@
 import { Mail, MessageSquare } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 
+// Static info page — cache for 24h
+export const revalidate = 86400;
+
 const reasons = [
   "General enquiry",
   "Submit an opportunity",

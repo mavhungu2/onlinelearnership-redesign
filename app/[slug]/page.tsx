@@ -18,6 +18,9 @@ import { AdBetweenParagraphs, AdInArticle, AdMultiplex, AdSidebar } from "@/comp
 import { getOpportunity, getRelatedOpportunitiesFor } from "@/lib/opportunities";
 import { deadlineLabel, formatDate, typeColors, typeLabels } from "@/lib/utils";
 
+// ISR — detail pages change rarely (only when employer updates the WP post). 10 min cache.
+export const revalidate = 600;
+
 export async function generateMetadata(
   props: PageProps<"/[slug]">,
 ): Promise<Metadata> {

@@ -8,6 +8,9 @@ import { listOpportunities } from "@/lib/opportunities";
 import type { Opportunity } from "@/lib/types";
 import { typeLabels } from "@/lib/utils";
 
+// ISR — each URL+filter combo cached at edge for 5 min. Significantly improves TTFB.
+export const revalidate = 300;
+
 const provinces = [
   "Gauteng",
   "Western Cape",

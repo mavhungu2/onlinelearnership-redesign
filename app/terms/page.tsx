@@ -1,5 +1,8 @@
 import { PageHero } from "@/components/PageHero";
 
+// Legal page — cache for 24h
+export const revalidate = 86400;
+
 export default function TermsPage() {
   return (
     <>

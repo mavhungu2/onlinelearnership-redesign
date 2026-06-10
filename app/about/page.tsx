@@ -2,6 +2,9 @@ import Link from "next/link";
 import { Compass, GraduationCap, Shield, Sparkles, Target, Users } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 
+// Static info page — cache for 24h
+export const revalidate = 86400;
+
 const values = [
   {
     icon: Shield,
