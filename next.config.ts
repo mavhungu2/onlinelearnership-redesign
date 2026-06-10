@@ -1,6 +1,22 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Card images are served from the WordPress install on Hostinger as raw
+  // JPEGs. Routing them through the Next image optimizer re-sizes per device
+  // and converts to WebP — Lighthouse measured ~740KB of savings on mobile.
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "wp.onlinelearnership.co.za",
+        pathname: "/wp-content/**",
+      },
+    ],
+    // WP uploads are effectively immutable (new uploads get new filenames),
+    // so let the optimizer cache aggressively.
+    minimumCacheTTL: 86400,
+  },
+
   // Override Next.js's default no-cache headers so Firebase's CDN actually
   // caches our rendered HTML. We manage data freshness via our own in-memory
   // cache in lib/wp.ts (5 min TTL), so 5 min edge cache is safe.
@@ -11,7 +27,22 @@ const nextConfig: NextConfig = {
   async headers() {
     const cacheable = "public, max-age=0, s-maxage=300, stale-while-revalidate=86400";
     const longCache = "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800";
+    const securityHeaders = [
+      // Force HTTPS for a year (Lighthouse: "Use a strong HSTS policy")
+      { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
+      // Block clickjacking (Lighthouse: "Mitigate clickjacking with XFO or CSP")
+      { key: "X-Frame-Options", value: "SAMEORIGIN" },
+      // Origin isolation without breaking AdSense popups (Lighthouse: COOP)
+      { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+    ];
     return [
+      {
+        // Security headers on every route
+        source: "/(.*)",
+        headers: securityHeaders,
+      },
       {
         // All page routes: cache at edge for 5 min
         source: "/((?!_next/|api/|.*\\..*).*)",
@@ -26,6 +57,17 @@ const nextConfig: NextConfig = {
         // sitemap & robots also fine to cache
         source: "/(sitemap.xml|robots.txt|ads.txt)",
         headers: [{ key: "Cache-Control", value: cacheable }],
+      },
+      {
+        // Static assets in /public (logo etc.) — cache for a day at browser,
+        // a month at edge (Lighthouse: "Use efficient cache lifetimes")
+        source: "/:all*(svg|jpg|jpeg|png|webp|avif|ico|woff2)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, s-maxage=2592000, stale-while-revalidate=86400",
+          },
+        ],
       },
     ];
   },

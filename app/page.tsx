@@ -27,7 +27,9 @@ const trustedEmployers = [
 ];
 
 export default async function Home() {
-  const opportunities = await listOpportunities({ perPage: 24 });
+  // 12 posts covers everything rendered (3 featured + 6 latest + 5 closing-soon)
+  // and keeps the HTML payload lean — slow-4G mobile downloads the page faster.
+  const opportunities = await listOpportunities({ perPage: 12 });
   const featured = (opportunities.filter((o) => o.featured).slice(0, 3).length > 0
     ? opportunities.filter((o) => o.featured).slice(0, 3)
     : opportunities.slice(0, 3));
@@ -78,8 +80,8 @@ export default async function Home() {
           </Link>
         </div>
         <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {featured.map((opp) => (
-            <OpportunityCard key={opp.slug} opportunity={opp} variant="featured" />
+          {featured.map((opp, i) => (
+            <OpportunityCard key={opp.slug} opportunity={opp} variant="featured" priority={i === 0} />
           ))}
         </div>
       </section>

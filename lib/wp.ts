@@ -225,6 +225,31 @@ const QUALIFICATION_PATTERNS: { pattern: RegExp; qualification: Qualification }[
   { pattern: /\b(grade 10)\b/i, qualification: "Grade 10" },
 ];
 
+// After moving WP to wp.onlinelearnership.co.za, the API emits media URLs on
+// the unstable double-prefixed host "www.wp.onlinelearnership.co.za" (works only
+// via Hostinger's wildcard). Normalise all /wp-content/ URLs to the canonical
+// wp. host, and point any page-links at the new www site.
+const WP_MEDIA_HOST = "wp.onlinelearnership.co.za";
+
+function normalizeMediaUrl(url: string): string {
+  return url.replace(
+    /https?:\/\/(?:www\.)?(?:wp\.)?onlinelearnership\.co\.za(\/wp-content\/)/gi,
+    `https://${WP_MEDIA_HOST}$1`,
+  );
+}
+
+function normalizeContentHtml(html: string): string {
+  return (
+    normalizeMediaUrl(html)
+      // Internal page links that WP rewrote to the wp. host should land on the
+      // new public site instead (wp-content/wp-json/wp-admin stay on wp.)
+      .replace(
+        /https?:\/\/(?:www\.)?wp\.onlinelearnership\.co\.za\/(?!wp-content|wp-json|wp-admin)/gi,
+        "https://www.onlinelearnership.co.za/",
+      )
+  );
+}
+
 function decodeHtml(html: string): string {
   return html
     .replace(/&amp;/g, "&")
@@ -434,14 +459,15 @@ function deriveTags(post: WPPost): string[] {
 function deriveImage(post: WPPost): { url?: string; alt?: string } {
   const media = post._embedded?.["wp:featuredmedia"]?.[0];
   if (!media) return {};
-  // Prefer "medium_large" (768px) for cards — good balance of quality vs. weight
+  // Prefer "medium_large" (768px) for cards — good balance of quality vs. weight.
+  // next/image re-sizes + converts to WebP downstream, so this is just the source.
   const sizes = media.media_details?.sizes;
   const url =
     sizes?.medium_large?.source_url ??
     sizes?.large?.source_url ??
     sizes?.medium?.source_url ??
     media.source_url;
-  return { url, alt: media.alt_text || undefined };
+  return { url: url ? normalizeMediaUrl(url) : undefined, alt: media.alt_text || undefined };
 }
 
 export function mapPostToOpportunity(post: WPPost): Opportunity {
@@ -471,7 +497,8 @@ export function mapPostToOpportunity(post: WPPost): Opportunity {
   };
 }
 
-// Returns the raw HTML content for rich rendering on detail pages
+// Returns the raw HTML content for rich rendering on detail pages,
+// with media hosts normalised and page links pointed at the new site.
 export function getRichContent(post: WPPost): string {
-  return post.content.rendered;
+  return normalizeContentHtml(post.content.rendered);
 }

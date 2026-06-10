@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Calendar, GraduationCap, MapPin, Wallet } from "lucide-react";
 import type { Opportunity } from "@/lib/types";
@@ -31,9 +32,11 @@ function getOrgInitials(name: string): string {
 interface Props {
   opportunity: Opportunity;
   variant?: "default" | "featured" | "compact";
+  /** Eager-load + preload the image (set on the first above-the-fold card for LCP). */
+  priority?: boolean;
 }
 
-export function OpportunityCard({ opportunity, variant = "default" }: Props) {
+export function OpportunityCard({ opportunity, variant = "default", priority = false }: Props) {
   const deadline = deadlineLabel(opportunity.closingDate);
   const gradient = orgGradients[opportunity.organisation] ?? "from-slate-600 to-slate-800";
   const initials = getOrgInitials(opportunity.organisation);
@@ -79,12 +82,13 @@ export function OpportunityCard({ opportunity, variant = "default" }: Props) {
       <div className={`relative h-44 overflow-hidden ${hasImage ? "bg-slate-100" : `bg-gradient-to-br ${gradient}`}`}>
         {hasImage ? (
           <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={opportunity.image}
+            <Image
+              src={opportunity.image!}
               alt={opportunity.imageAlt || opportunity.title}
-              className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
-              loading="lazy"
+              fill
+              sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 384px"
+              priority={priority}
+              className="object-cover transition duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-950/15 to-transparent" />
           </>
@@ -116,7 +120,7 @@ export function OpportunityCard({ opportunity, variant = "default" }: Props) {
           >
             {typeLabels[opportunity.type]}
           </span>
-          <span className="text-slate-400">·</span>
+          <span className="text-slate-500">·</span>
           <span className="text-slate-500">{opportunity.category}</span>
         </div>
 

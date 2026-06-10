@@ -63,9 +63,9 @@ export function Footer() {
 
           {footerSections.map((section) => (
             <div key={section.title}>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                 {section.title}
-              </h4>
+              </h3>
               <ul className="mt-4 space-y-3 text-sm">
                 {section.links.map((link) => (
                   <li key={link.href + link.label}>
@@ -84,7 +84,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-slate-800">
-        <div className="container-page flex flex-col-reverse items-start gap-4 py-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+        <div className="container-page flex flex-col-reverse items-start gap-4 py-6 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Online Learnership. All rights reserved.</p>
           <div className="flex items-center gap-5">
             <span>Built with care for South African youth</span>

@@ -133,7 +133,7 @@ export default async function OpportunitiesPage(props: PageProps<"/opportunities
                           className={`flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium ${isActive ? "bg-brand-50 text-brand-700" : "text-slate-700 hover:bg-slate-50"}`}
                         >
                           <span>{c.name}</span>
-                          <span className={`text-xs ${isActive ? "text-brand-700" : "text-slate-400"}`}>{c.count}</span>
+                          <span className={`text-xs ${isActive ? "text-brand-700" : "text-slate-500"}`}>{c.count}</span>
                         </Link>
                       </li>
                     );

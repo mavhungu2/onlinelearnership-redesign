@@ -57,28 +57,53 @@ const minHeights: Record<Layout, string> = {
 
 export function AdSlot({ slot, layout = "horizontal", className = "", label }: AdSlotProps) {
   const ref = useRef<HTMLModElement>(null);
+  const containerRef = useRef<HTMLElement | null>(null);
   const pushed = useRef(false);
 
+  // Only initialise the ad when the slot scrolls within 400px of the viewport.
+  // Keeps AdSense work off the critical path (Lighthouse: long main-thread tasks)
+  // and skips ad requests for slots the user never reaches.
   useEffect(() => {
     if (pushed.current) return;
-    if (typeof window === "undefined") return;
-    if (!ref.current) return;
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-      pushed.current = true;
-    } catch (err) {
-      console.warn("[ads] push failed", err);
+    const el = containerRef.current;
+    if (!el) return;
+
+    const fire = () => {
+      if (pushed.current) return;
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        pushed.current = true;
+      } catch (err) {
+        console.warn("[ads] push failed", err);
+      }
+    };
+
+    if (!("IntersectionObserver" in window)) {
+      fire();
+      return;
     }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          fire();
+          io.disconnect();
+        }
+      },
+      { rootMargin: "400px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   const attrs = layoutAttrs[layout];
 
   return (
     <aside
+      ref={containerRef}
       className={`relative w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 ${minHeights[layout]} ${className}`}
       aria-label="Advertisement"
     >
-      <span className="absolute left-3 top-2 z-10 text-[10px] font-medium uppercase tracking-wider text-slate-400">
+      <span className="absolute left-3 top-2 z-10 text-[10px] font-medium uppercase tracking-wider text-slate-600">
         {label ?? "Advertisement"}
       </span>
       <ins

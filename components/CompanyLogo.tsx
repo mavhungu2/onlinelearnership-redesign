@@ -35,6 +35,8 @@ export function CompanyLogo({ name, domain, className = "" }: Props) {
     <img
       src={src}
       alt={`${name} logo`}
+      width={200}
+      height={200}
       onError={() => setErrored(true)}
       className={`h-10 w-auto max-w-[140px] object-contain opacity-80 transition hover:opacity-100 ${className}`}
       loading="lazy"
