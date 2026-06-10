@@ -1,21 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Card images are served from the WordPress install on Hostinger as raw
-  // JPEGs. Routing them through the Next image optimizer re-sizes per device
-  // and converts to WebP — Lighthouse measured ~740KB of savings on mobile.
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "wp.onlinelearnership.co.za",
-        pathname: "/wp-content/**",
-      },
-    ],
-    // WP uploads are effectively immutable (new uploads get new filenames),
-    // so let the optimizer cache aggressively.
-    minimumCacheTTL: 86400,
-  },
+  // NOTE: Firebase App Hosting's Next.js adapter disables the built-in image
+  // optimizer (/_next/image returns 404), so next/image cannot be used here.
+  // Card images are optimized via wsrv.nl instead — see components/CardImage.tsx.
 
   // Override Next.js's default no-cache headers so Firebase's CDN actually
   // caches our rendered HTML. We manage data freshness via our own in-memory

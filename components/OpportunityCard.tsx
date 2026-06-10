@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Calendar, GraduationCap, MapPin, Wallet } from "lucide-react";
+import { CardImage } from "./CardImage";
 import type { Opportunity } from "@/lib/types";
 import { deadlineLabel, typeColors, typeLabels } from "@/lib/utils";
 
@@ -82,13 +82,11 @@ export function OpportunityCard({ opportunity, variant = "default", priority = f
       <div className={`relative h-44 overflow-hidden ${hasImage ? "bg-slate-100" : `bg-gradient-to-br ${gradient}`}`}>
         {hasImage ? (
           <>
-            <Image
+            <CardImage
               src={opportunity.image!}
               alt={opportunity.imageAlt || opportunity.title}
-              fill
-              sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 384px"
               priority={priority}
-              className="object-cover transition duration-500 group-hover:scale-105"
+              className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-950/15 to-transparent" />
           </>
