@@ -30,6 +30,13 @@ env:
       - BUILD
       - RUNTIME
 
+  # Google Analytics 4
+  - variable: NEXT_PUBLIC_GA_ID
+    value: G-5MXHKP42PE
+    availability:
+      - BUILD
+      - RUNTIME
+
   # Google AdSense — same publisher ID + ad units that run on the WordPress site
   - variable: NEXT_PUBLIC_ADSENSE_CLIENT
     value: ca-pub-4043939286605519

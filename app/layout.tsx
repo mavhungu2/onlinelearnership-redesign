@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AdScript } from "@/components/AdScript";
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-5MXHKP42PE";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -48,6 +51,7 @@ export default function RootLayout({
         <Footer />
         <AdScript />
       </body>
+      {GA_ID ? <GoogleAnalytics gaId={GA_ID} /> : null}
     </html>
   );
 }
